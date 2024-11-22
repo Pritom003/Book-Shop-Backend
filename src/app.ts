@@ -1,5 +1,7 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
+import Booksrouter from './app/Books/Books.routers';
+// import Booksrouter from './app/Bookss/Bookss.routers';
 
 const app: Application = express();
 
@@ -7,6 +9,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 // app Routes
+app.use('/api/v1/products', Booksrouter);
 
 // Root route
 app.get('/', (req: Request, res: Response) => {
@@ -19,3 +22,7 @@ app.use((req: Request, res: Response) => {
 });
 
 export default app;
+
+
+
+
