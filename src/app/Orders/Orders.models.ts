@@ -1,4 +1,3 @@
-
 import mongoose, { model, Schema } from 'mongoose';
 import validator from 'validator';
 import { OrderModel, TOrder } from './Orders.interface';
@@ -32,7 +31,7 @@ const OrderSchema = new Schema<TOrder, OrderModel>(
       min: [0, 'Total price cannot be negative'],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Add static method to place an order
@@ -42,24 +41,23 @@ OrderSchema.static('placeOrder', async function (orderData: TOrder) {
     const product = await ProductsModel.findById(orderData.product);
     if (!product) {
       throw new Error('Invalid product ID: Product not found.');
-    }else if (product.quantity < orderData.quantity) {
-      throw new Error(`Insufficient stock available. Only ${product.quantity} items are in stock.`);
-    }else{
-    const totalPrice = product.price * orderData.quantity;
-    const order = await this.create([{ ...orderData, totalPrice }]);
+    } else if (product.quantity < orderData.quantity) {
+      throw new Error(
+        `Insufficient stock available. Only ${product.quantity} items are in stock.`,
+      );
+    } else {
+      const totalPrice = product.price * orderData.quantity;
+      const order = await this.create([{ ...orderData, totalPrice }]);
 
-    // Update the product stock after the order is placed
-    product.quantity -= orderData.quantity;
-    await product.save();
-    return order[0]; 
-
-  }} catch (error: any) {
+      // Update the product stock after the order is placed
+      product.quantity -= orderData.quantity;
+      await product.save();
+      return order[0];
+    }
+  } catch (error: any) {
     throw new Error(error.message);
   }
 });
-
-  
-
 
 const OrdersModel = model<TOrder, OrderModel>('Order', OrderSchema);
 export default OrdersModel;

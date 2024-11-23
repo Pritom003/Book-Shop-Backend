@@ -26,11 +26,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       path: req.originalUrl,
     },
   });
-  next()
+  next();
 });
 
 export default app;
-
-
-
-
