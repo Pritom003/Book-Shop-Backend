@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const BookValidator = z.object({
+export const ProductValidator = z.object({
   title: z
     .string()
     .min(3, 'Title must be at least 3 characters long.')

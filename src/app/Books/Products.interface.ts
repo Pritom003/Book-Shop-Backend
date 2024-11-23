@@ -1,4 +1,4 @@
-export type TBooks = {
+export type TProducts = {
     title: string;
     author: string;
     price: number;

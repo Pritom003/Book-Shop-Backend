@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
-import { TBooks } from './Books.interface';
+import { TProducts } from './Products.interface';
 
 // Create the Mongoose schema
-const BooksSchema = new Schema<TBooks>(
+const ProductsSchema = new Schema<TProducts>(
   {
     title: { 
       type: String, 
@@ -49,5 +49,5 @@ const BooksSchema = new Schema<TBooks>(
   { timestamps: true }
 );
 
-const BooksModel = model<TBooks>('Books', BooksSchema);
-export default BooksModel;
+const ProductsModel = model<TProducts>('Products', ProductsSchema);
+export default ProductsModel;
