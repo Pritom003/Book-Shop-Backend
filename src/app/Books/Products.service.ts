@@ -6,15 +6,34 @@ const createProductsTooDB = async (Products: TProducts) => {
   return result;
 };
 
-const getAllProducts = async () => {
-  const result = await ProductsModel.find();
-  return result;
+const getAllProducts = async (searchTerm: string) => {
+  try {
+    let query = {};
+
+    if (searchTerm) {
+      const regex = new RegExp(searchTerm, 'i');
+      query = {
+        $or: [
+          { title: { $regex: regex } },
+          { author: { $regex: regex } },
+          { category: { $regex: regex } },
+        ],
+      };
+    }
+    const result = await ProductsModel.find(query);
+    if (result.length === 0) {
+      throw new Error('No products matched your search criteria.');
+    }
+    return result;
+  } catch (error: any) {
+    throw new Error(`Error fetching products: ${error.message}`);
+  }
 };
 
 // Get a single product by productId
 const getSingleProduct = async (productId: string) => {
   try {
-    const result = await ProductsModel.findByProductId(productId); 
+    const result = await ProductsModel.findByProductId(productId);
     if (!result) {
       throw new Error('Product not found');
     }

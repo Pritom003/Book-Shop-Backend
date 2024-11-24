@@ -34,22 +34,28 @@ const result =await ProductsServices.createProductsTooDB(ZoeValidation)
 };
 
 // Get all products
-const getAllProducts = async (req: Request, res: Response) => {
+export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductsServices.getAllProducts();
+    // Extract search term from query parameters
+    const { searchTerm } = req.query;
+
+    // Pass the searchTerm to the service
+    const result = await ProductsServices.getAllProducts(searchTerm as string);
+
     res.status(200).json({
       success: true,
       message: 'Books retrieved successfully',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'something went wrong',
-      data: err,
+      message: 'Something went wrong',
+      data: err.message,
     });
   }
 };
+
 // Get a single product by :productId
 const getSingleProduct = async (req: Request, res: Response) => {
   try {

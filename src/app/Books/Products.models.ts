@@ -54,6 +54,21 @@ const ProductsSchema = new Schema<TProducts, TProductsModel>(
   },
   { timestamps: true },
 );
+// Pre-hook for search functionality
+ProductsSchema.pre('find', function (next) {
+  const searchTerm = this.getQuery().searchTerm;
+  if (searchTerm) {
+    const regex = new RegExp(searchTerm, 'i');
+
+    // Search by title, author, or category
+    this.or([
+      { title: { $regex: regex } },
+      { author: { $regex: regex } },
+      { category: { $regex: regex } },
+    ]);
+  }
+  next();
+});
 
 // Static method to find a product by its ID
 ProductsSchema.statics.findByProductId = async function (productId: string) {

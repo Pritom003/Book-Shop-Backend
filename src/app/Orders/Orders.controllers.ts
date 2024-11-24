@@ -15,11 +15,10 @@ const createOrders = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    
     res.status(400).json({
       success: false,
       message: err.message || 'Something went wrong while placing the order',
-      error: err, 
+      error: err,
     });
   }
 };
