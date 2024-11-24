@@ -50,69 +50,74 @@ const getAllProducts = async (req: Request, res: Response) => {
     });
   }
 };
-// Get single  product by :productId
+// Get a single product by :productId
 const getSingleProduct = async (req: Request, res: Response) => {
   try {
-    const { productId } = req.params;
+    const { productId } = req.params;  
+ 
     const result = await ProductsServices.getSingleProduct(productId);
     res.status(200).json({
       success: true,
-      message: 'Book retrieved successfully',
+      message: 'Product retrieved successfully',
       data: result,
     });
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'something went wrong',
-      data: err,
-      stack: err.stack,
+      message: 'Something went wrong',
+      error: err.message,
     });
   }
 };
 
-// update Product byt ProductID
-const updateProuct = async (req: Request, res: Response) => {
+
+
+// Update a product by :productId
+const updateProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
     const body = req.body;
     const result = await ProductsServices.updateProduct(productId, body);
-
-    res.send({
-      status: true,
-      message: 'Book updated successfully',
-      result,
+ 
+    // If the product is found, return it
+    res.status(200).json({
+      success: true,
+      message: 'Product upadate successfully',
+      data: result,
     });
-  } catch (error) {
-    res.json({
-      status: false,
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
       message: 'Something went wrong',
-      error,
+      error: err.message,
+
     });
   }
 };
 
+// Delete a product by :productId
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
-    await ProductsServices.deleteProduct(productId);
-
-    res.send({
-      status: true,
+  await ProductsServices.deleteProduct(productId);
+  res.status(200).json({
+      success: true,
       message: 'Book deleted successfully',
       data: {},
     });
-  } catch (error) {
-    res.json({
-      status: false,
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
       message: 'Something went wrong',
-      error,
+      error:error.message,
     });
   }
 };
+
 export const ProductsControllers = {
   createProducts,
   getAllProducts,
   getSingleProduct,
-  updateProuct,
+  updateProduct,
   deleteProduct,
 };

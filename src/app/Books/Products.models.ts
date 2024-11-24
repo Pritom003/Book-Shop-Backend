@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
-import { TProducts } from './Products.interface';
+import { TProductsModel, TProducts } from './Products.interface';
 
 // Create the Mongoose schema
-const ProductsSchema = new Schema<TProducts>(
+const ProductsSchema = new Schema<TProducts ,TProductsModel>(
   {
     title: {
       type: String,
@@ -55,5 +55,19 @@ const ProductsSchema = new Schema<TProducts>(
   { timestamps: true },
 );
 
-const ProductsModel = model<TProducts>('Products', ProductsSchema);
+// Static method to find a product by its ID
+ProductsSchema.statics.findByProductId = async function (productId: string) {
+  try {
+    const existingProduct = await this.findById(productId);
+    if (!existingProduct) {
+      throw new Error('Product not found');
+    }
+    return existingProduct;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+// Create and export the model
+const ProductsModel = model<TProducts, TProductsModel>('Products', ProductsSchema);
 export default ProductsModel;
