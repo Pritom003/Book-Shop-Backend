@@ -1,5 +1,4 @@
-import { Model } from "mongoose";
-
+import { Model } from 'mongoose';
 
 export type TProducts = {
   title: string;
@@ -11,7 +10,7 @@ export type TProducts = {
   inStock: boolean;
 };
 
-export interface TProductsModel extends Model<TProducts, Record<string, unknown>> {
+export interface TProductsModel
+  extends Model<TProducts, Record<string, unknown>> {
   findByProductId(productId: string): Promise<TProducts | null>;
-
 }

@@ -15,13 +15,11 @@ const createOrders = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    // Handle error and return detailed error message to the client
-    console.error('Error placing order:', err); // Log the error for server-side debugging
-
+    
     res.status(400).json({
       success: false,
       message: err.message || 'Something went wrong while placing the order',
-      error: err, // Optionally, return the full error object for debugging (not recommended in production)
+      error: err, 
     });
   }
 };
@@ -39,8 +37,6 @@ const getOrderRevenue = async (req: Request, res: Response) => {
       },
     });
   } catch (err: any) {
-    console.error('Error calculating revenue:', err); // Log error for debugging
-
     res.status(400).json({
       success: false,
       message: err.message || 'Something went wrong while calculating revenue',

@@ -53,8 +53,8 @@ const getAllProducts = async (req: Request, res: Response) => {
 // Get a single product by :productId
 const getSingleProduct = async (req: Request, res: Response) => {
   try {
-    const { productId } = req.params;  
- 
+    const { productId } = req.params;
+
     const result = await ProductsServices.getSingleProduct(productId);
     res.status(200).json({
       success: true,
@@ -70,15 +70,13 @@ const getSingleProduct = async (req: Request, res: Response) => {
   }
 };
 
-
-
 // Update a product by :productId
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
     const body = req.body;
     const result = await ProductsServices.updateProduct(productId, body);
- 
+
     // If the product is found, return it
     res.status(200).json({
       success: true,
@@ -90,7 +88,6 @@ const updateProduct = async (req: Request, res: Response) => {
       success: false,
       message: 'Something went wrong',
       error: err.message,
-
     });
   }
 };
@@ -99,17 +96,17 @@ const updateProduct = async (req: Request, res: Response) => {
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
-  await ProductsServices.deleteProduct(productId);
-  res.status(200).json({
+    await ProductsServices.deleteProduct(productId);
+    res.status(200).json({
       success: true,
       message: 'Book deleted successfully',
       data: {},
     });
-  } catch (error:any) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: 'Something went wrong',
-      error:error.message,
+      error: error.message,
     });
   }
 };

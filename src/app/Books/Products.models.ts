@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 import { TProductsModel, TProducts } from './Products.interface';
 
 // Create the Mongoose schema
-const ProductsSchema = new Schema<TProducts ,TProductsModel>(
+const ProductsSchema = new Schema<TProducts, TProductsModel>(
   {
     title: {
       type: String,
@@ -69,5 +69,8 @@ ProductsSchema.statics.findByProductId = async function (productId: string) {
 };
 
 // Create and export the model
-const ProductsModel = model<TProducts, TProductsModel>('Products', ProductsSchema);
+const ProductsModel = model<TProducts, TProductsModel>(
+  'Products',
+  ProductsSchema,
+);
 export default ProductsModel;
