@@ -59,4 +59,4 @@ MONGO_URI=mongodb+srv://user-v3:wrwQprhEVqQyK0MQ@cluster0.ucoarqa.mongodb.net/Bo
 npm run dev
 
 The server will run at  http://localhost:5000.
-### Live Link - https://book-shop-backend-navy.vercel.app/api/products
+### Live Link - https://book-shop-backend-navy.vercel.app
