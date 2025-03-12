@@ -6,7 +6,7 @@ const createProductsTooDB = async (Products: TProducts) => {
   return result;
 };
 
-const getAllProducts = async (searchTerm: string) => {
+const getAllProducts = async (searchTerm: string, page: number = 1, limit: number = 10 ,category:string) => {
   try {
     let query = {};
 
@@ -20,15 +20,33 @@ const getAllProducts = async (searchTerm: string) => {
         ],
       };
     }
-    const result = await ProductsModel.find(query);
+
+    // Check for category and other filters
+    if (category) {
+      query = { ...query, category };
+    }
+
+    // Pagination
+    const skip = (page - 1) * limit;
+    const result = await ProductsModel.find(query).skip(skip).limit(limit);
+
+    // Count the total number of products matching the query
+    const totalCount = await ProductsModel.countDocuments(query);
+
     if (result.length === 0) {
       throw new Error('No products matched your search criteria.');
     }
-    return result;
+
+    return {
+      products: result,
+      total: totalCount,
+    };
   } catch (error: any) {
     throw new Error(`Error fetching products: ${error.message}`);
   }
 };
+
+
 
 // Get a single product by productId
 const getSingleProduct = async (productId: string) => {

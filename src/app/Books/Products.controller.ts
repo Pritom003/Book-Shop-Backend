@@ -7,12 +7,7 @@ const createProducts = async (req: Request, res: Response) => {
   try {
     // receiving data from frontend
     const Products = req.body;
-    /* zod validation 
 
-const ZoeValidation = ProductValidator.parse(Products);
-const result =await ProductsServices.createProductsTooDB(ZoeValidation)
-
-*/
 
     // sending  Productss to  services without z validatoin
     const result = await ProductsServices.createProductsTooDB(Products);
@@ -37,10 +32,15 @@ const result =await ProductsServices.createProductsTooDB(ZoeValidation)
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     // Extract search term from query parameters
-    const { searchTerm } = req.query;
+    const { searchTerm, category, page, limit } = req.query;
 
-    // Pass the searchTerm to the service
-    const result = await ProductsServices.getAllProducts(searchTerm as string);
+    // Pass the parameters to the service
+    const result = await ProductsServices.getAllProducts(
+      searchTerm as string,
+      parseInt(page as string, 10) || 1, // Default to 1 if page is not provided
+      parseInt(limit as string, 10) || 10, // Default to 10 if limit is not provided
+      category as string
+    );
 
     res.status(200).json({
       success: true,
