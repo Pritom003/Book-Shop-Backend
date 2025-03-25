@@ -1,10 +1,13 @@
+
 import { Request, Response } from 'express';
 import CatchAsync from '../Utils/CatchAsync';
 import { AuthService } from './Auth.service';
 import sendResponse from '../Utils/sendResponse';
+// import AppError from '../Errors/AppErrors';
 
 const register = CatchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.register(req.body);
+  const files = req.files as any;
+  const result = await AuthService.register(req.body,files);
 
   sendResponse(res, {
     statusCode: 201,
@@ -25,7 +28,8 @@ const login = CatchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
 export const AuthController = {
   register,
-  login,
+  login
 };

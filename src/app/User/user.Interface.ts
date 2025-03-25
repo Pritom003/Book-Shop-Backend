@@ -4,8 +4,11 @@ export interface UserInterface {
   name: string;
   email: string;
   password: string;
+  Profileimage:string;
   role: 'ADMIN' | 'USER';
   is_blocked?: boolean;
+  needsPasswordChange: boolean;
+  passwordChangedAt?: Date;
 }
 
 export interface UserModel extends Model<UserInterface> {

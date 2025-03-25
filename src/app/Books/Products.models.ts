@@ -16,6 +16,10 @@ const ProductsSchema = new Schema<TProducts, TProductsModel>(
       minlength: [3, 'Author name must be at least 3 characters long.'],
       maxlength: [50, 'Author name cannot exceed 50 characters.'],
     },
+    authorImage: {
+      type: String, // URL for the author image
+      default: null, // Optional field
+    },
     price: {
       type: Number,
       required: [true, 'Price is required.'],
@@ -25,13 +29,7 @@ const ProductsSchema = new Schema<TProducts, TProductsModel>(
       type: String,
       required: [true, 'Category is required.'],
       enum: {
-        values: [
-          'Fiction',
-          'Science',
-          'SelfDevelopment',
-          'Poetry',
-          'Religious',
-        ],
+        values: ['Fiction', 'Science', 'SelfDevelopment', 'Poetry', 'Religious'],
         message: '[VALUE] this category cant be added',
       },
     },
@@ -51,8 +49,13 @@ const ProductsSchema = new Schema<TProducts, TProductsModel>(
       required: [true, 'InStock status is required.'],
       default: true,
     },
+    bookCover: {
+      type: String, // URL for the book cover image
+      required: [true, 'Book cover image is required.'],
+    },
+      user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, 
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 // Pre-hook for search functionality
 ProductsSchema.pre('find', function (next) {

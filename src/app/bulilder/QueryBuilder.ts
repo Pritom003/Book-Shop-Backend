@@ -13,12 +13,9 @@ class QueryBuilder<T> {
     const search = this?.query?.search;
     if (search) {
       this.modelQuery = this.modelQuery.find({
-        $or: searchableFields.map(
-          (field) =>
-            ({
-              [field]: { $regex: search, $options: 'i' },
-            }) as FilterQuery<T>
-        ),
+        $or: searchableFields.map((field) => ({
+          [field]: { $regex: search, $options: 'i' },
+        })),
       });
     }
     return this;
@@ -26,13 +23,25 @@ class QueryBuilder<T> {
 
   filter() {
     const queryObj = { ...this.query };
-    const excludeFields = ['search', 'sortOrder', 'sortBy', 'limit', 'page', 'fields'];
+    const excludeFields = ['search', 'sortOrder', 'sortBy', 'limit', 'page', 'fields', 'isNewArrival', 'minPrice', 'maxPrice'];
     excludeFields.forEach((el) => delete queryObj[el]);
 
     if (queryObj.filter) {
       queryObj['author._id'] = queryObj.filter;
       delete queryObj.filter;
     }
+
+    if (this.query.isNewArrival) {
+      queryObj.createdAt = { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) };
+    }
+
+    if (this.query.minPrice || this.query.maxPrice) {
+      queryObj.price = {} as Record<string, number>;
+      if (this.query.minPrice) (queryObj.price as Record<string, number>).$gte = Number(this.query.minPrice);
+      if (this.query.maxPrice) (queryObj.price as Record<string, number>).$lte = Number(this.query.maxPrice);
+    }
+    
+    
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
@@ -41,14 +50,20 @@ class QueryBuilder<T> {
   sort() {
     const sortBy = (this?.query?.sortBy as string)?.split(',')?.join(' ') || 'createdAt';
     const sortOrder = this?.query?.sortOrder || 'desc';
-    const sortQuery = sortOrder === 'desc' ? `-${sortBy}` : sortBy;
+
+    let sortQuery = sortOrder === 'desc' ? `-${sortBy}` : sortBy;
+
+    if (this.query.isNewArrival) {
+      sortQuery = '-createdAt';
+    }
+
     this.modelQuery = this.modelQuery.sort(sortQuery);
     return this;
   }
 
   paginate() {
     const page = Number(this?.query?.page) || 1;
-    const limit = Number(this?.query?.limit) || 10;
+    const limit = Number(this?.query?.limit) || 6;
     const skip = (page - 1) * limit;
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
